@@ -2,26 +2,28 @@ package com.example.juand.consentrese;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
+
+import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NivelFragments.OnFragmentInteractionListener} interface
+ * {@link ListaPuntajes.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NivelFragments#newInstance} factory method to
+ * Use the {@link ListaPuntajes#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NivelFragments extends Fragment {
+public class ListaPuntajes extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,16 +35,17 @@ public class NivelFragments extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public NivelFragments() {
-        // Required empty public constructor
-    }
-
+    RecyclerView recyclerView;
     View view;
     Activity activity;
     Puente miPuente;
-    ImageButton volver;
-    Bundle miBundle;
-    Button facil,medio,dificil;
+    SQLiteDatabase sqLiteDatabase;
+    Conexion conn;
+    UserVo miUserVo;
+    ArrayList<UserVo> lista;
+    public ListaPuntajes() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -50,11 +53,11 @@ public class NivelFragments extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NivelFragments.
+     * @return A new instance of fragment ListaPuntajes.
      */
     // TODO: Rename and change types and number of parameters
-    public static NivelFragments newInstance(String param1, String param2) {
-        NivelFragments fragment = new NivelFragments();
+    public static ListaPuntajes newInstance(String param1, String param2) {
+        ListaPuntajes fragment = new ListaPuntajes();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -75,32 +78,35 @@ public class NivelFragments extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_nivel_fragments, container, false);
+        view=inflater.inflate(R.layout.fragment_lista_puntajes, container, false);
 
-        volver=view.findViewById(R.id.volver);
-        facil=view.findViewById(R.id.btnFacil);
-        medio=view.findViewById(R.id.btnMedio);
-        dificil=view.findViewById(R.id.btnDificil);
-
-        miBundle=getArguments();
+        recyclerView=view.findViewById(R.id.recyclerPuntos);
 
 
-        volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                miPuente.pantalla(6,""+miBundle.get("nombre"));
-            }
-        });
 
-        facil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent miIntent=new Intent(getContext(),FacilActivity.class);
+        conn=new Conexion(getContext(),"Puntaje",null,1);
 
-                startActivity(miIntent);
-            }
-        });
+        lista=new ArrayList<>();
+        consultar();
+
+        Adapter miAdapter=new Adapter(lista);
+
+        recyclerView.setAdapter(miAdapter);
+
         return view;
+    }
+
+    private void consultar() {
+        sqLiteDatabase=conn.getReadableDatabase();
+
+        Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM juegos ORDER BY puntaje DESC",null);
+
+        while (cursor.moveToNext()){
+            miUserVo=new UserVo();
+            miUserVo.setNombre(cursor.getString(0));
+            miUserVo.setPuntaje(cursor.getString(1));
+            lista.add(miUserVo);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -113,9 +119,9 @@ public class NivelFragments extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Activity) {
-            this.activity = (Activity) context;
-            miPuente = (Puente) this.activity;
+        if (context instanceof Activity){
+            this.activity= (Activity) context;
+            miPuente= (Puente) activity;
         }
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

@@ -1,6 +1,5 @@
 package com.example.juand.consentrese;
 
-public interface AllFragments extends InicioFragment.OnFragmentInteractionListener,
-        PrincipalFragment.OnFragmentInteractionListener,
-        NivelFragments.OnFragmentInteractionListener {
+public interface AllFragments extends ListaPuntajes.OnFragmentInteractionListener,
+        PrincipalFragment.OnFragmentInteractionListener{
 }

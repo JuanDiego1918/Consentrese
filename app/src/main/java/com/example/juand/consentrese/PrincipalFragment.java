@@ -108,20 +108,28 @@ public class PrincipalFragment extends Fragment {
                         .setItems(items, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Intent miIntent=null;
                                 if (items[which]=="Facil") {
-                                    Intent miIntent=new Intent(getContext(),FacilActivity.class);
-                                    startActivity(miIntent);
+                                    miIntent=new Intent(getContext(),FacilActivity.class);
                                 }else {
                                     if (items[which]=="Medio"){
-                                        Toast.makeText(getContext(),"Medio",Toast.LENGTH_SHORT).show();
+                                        miIntent=new Intent(getContext(),MedioActivity.class);
                                     }else{
                                         Toast.makeText(getContext(),"Dificil",Toast.LENGTH_SHORT).show();
                                     }
                                 }
+                                startActivity(miIntent);
                             }
                         });
                 Dialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+
+        puntajes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                miPuente.pantalla(1);
             }
         });
 

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements AllFragments, Pue
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         primera = new Dialog(getApplicationContext());
-            ventanaEmergente1();
+        ventanaEmergente1();
 
     }
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements AllFragments, Pue
         builder.setPositiveButton("Registrar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Usuarios.player1=text.getText().toString();
+                Usuarios.player1 = text.getText().toString();
                 ventanaEmergente2();
             }
         });
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements AllFragments, Pue
         builder.setPositiveButton("Registrar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Usuarios.player2=text.getText().toString();
-                miFragment=new PrincipalFragment();
+                Usuarios.player2 = text.getText().toString();
+                miFragment = new PrincipalFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.contenedor, miFragment).commit();
             }
         });
@@ -91,18 +91,15 @@ public class MainActivity extends AppCompatActivity implements AllFragments, Pue
     }
 
     @Override
-    public void pantalla(int numeroPantalla, String nombre) {
-        Bundle miBundle = new Bundle();
-        miBundle.putString("nombre", nombre);
+    public void pantalla(int numeroPantalla) {
         switch (numeroPantalla) {
             case 1:
-                miFragment = new NivelFragments();
+                miFragment = new ListaPuntajes();
                 break;
             case 6:
                 miFragment = new PrincipalFragment();
                 break;
         }
-        miFragment.setArguments(miBundle);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.contenedor, miFragment).commit();
     }

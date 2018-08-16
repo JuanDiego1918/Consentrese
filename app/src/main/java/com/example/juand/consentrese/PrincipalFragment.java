@@ -115,7 +115,7 @@ public class PrincipalFragment extends Fragment {
                                     if (items[which]=="Medio"){
                                         miIntent=new Intent(getContext(),MedioActivity.class);
                                     }else{
-                                        Toast.makeText(getContext(),"Dificil",Toast.LENGTH_SHORT).show();
+                                        miIntent=new Intent(getContext(),DificilActivity.class);
                                     }
                                 }
                                 startActivity(miIntent);
